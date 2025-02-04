@@ -10,6 +10,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -53,5 +54,22 @@ public class TaskResource {
 	public Response delete(@PathParam("id") Long id) {
 		taskManagerRepository.remove(id);
 		return Response.status(Status.NO_CONTENT).build();
+	}
+	
+	@PUT
+	@Path("/{id}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("id") Long id, Task updatedTask) {
+		Task existingTask = taskManagerRepository.findById(id);
+		if(existingTask == null) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		else {
+			existingTask.setTitle(updatedTask.getTitle());
+			existingTask.setDescription(updatedTask.getDescription());
+			existingTask.setCompleted(updatedTask.isCompleted());
+			return Response.ok(existingTask).build();
+		}
 	}
 }
