@@ -12,9 +12,9 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String taskTitle;
+	private String title;
 	
-	private String taskDescription;
+	private String description;
 	
 	private boolean completed;
 
@@ -26,20 +26,20 @@ public class Task {
 		this.id = id;
 	}
 
-	public String getTaskTitle() {
-		return taskTitle;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setTaskTitle(String taskTitle) {
-		this.taskTitle = taskTitle;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getTaskDescription() {
-		return taskDescription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setTaskDescription(String taskDescription) {
-		this.taskDescription = taskDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public boolean isCompleted() {
@@ -49,6 +49,8 @@ public class Task {
 	public void setCompleted(boolean completed) {
 		this.completed = completed;
 	}
+
+	
 	
 	
 	

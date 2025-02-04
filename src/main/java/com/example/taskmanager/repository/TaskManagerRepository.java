@@ -27,7 +27,7 @@ public class TaskManagerRepository {
 		}
 	}
 	
-	public List<Task> getAllTask(){
+	public List<Task> findAllTasks(){
 		return entityManager.createQuery("Select t from Task t", Task.class).getResultList();
 	}
 }
