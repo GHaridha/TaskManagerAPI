@@ -69,6 +69,7 @@ public class TaskResource {
 			existingTask.setTitle(updatedTask.getTitle());
 			existingTask.setDescription(updatedTask.getDescription());
 			existingTask.setCompleted(updatedTask.isCompleted());
+			taskManagerRepository.save(existingTask);
 			return Response.ok(existingTask).build();
 		}
 	}
