@@ -32,7 +32,10 @@ public class TaskManagerRepository {
 		}
 	}
 	
-	public List<Task> findAllTasks(){
-		return entityManager.createQuery("Select t from Task t", Task.class).getResultList();
+	public List<Task> findAllTasks(int pageNum, int  pageSize){
+		return entityManager.createQuery("Select t from Task t", Task.class)
+				.setFirstResult(pageNum * pageSize)   // Set the first result based on page number and size
+                .setMaxResults(pageSize)  
+				.getResultList();
 	}
 }

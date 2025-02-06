@@ -6,14 +6,17 @@ import com.example.taskmanager.model.Task;
 import com.example.taskmanager.repository.TaskManagerRepository;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -26,14 +29,15 @@ public class TaskResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Task> getAllTasks() {
-	    return taskManagerRepository.findAllTasks();
+	public List<Task> getAllTasks(@QueryParam("pageNum") @DefaultValue("0") int pageNum ,
+			@QueryParam("pageSize") @DefaultValue("10") int pageSize) {
+	    return taskManagerRepository.findAllTasks(pageNum,pageSize);
 	}
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createTask(Task task) {
+	public Response createTask(@Valid Task task) {
 		taskManagerRepository.save(task);
 		return Response.status(Status.CREATED).entity(task).build();
 	}
