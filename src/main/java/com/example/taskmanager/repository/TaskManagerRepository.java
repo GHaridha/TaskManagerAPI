@@ -11,7 +11,7 @@ import jakarta.persistence.PersistenceContext;
 @ApplicationScoped
 public class TaskManagerRepository {
 
-	@PersistenceContext
+	@PersistenceContext(unitName = "task-manager-pu")  // ✅ This should match persistence.xml
 	private EntityManager entityManager;
 	
 	/*	If entity already exist it will update
