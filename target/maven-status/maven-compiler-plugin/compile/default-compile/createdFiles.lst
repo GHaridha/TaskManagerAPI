@@ -1,3 +1,5 @@
 com\example\taskmanager\api\TaskResource.class
 com\example\taskmanager\model\Task.class
+com\example\taskmanager\exception\CustomExceptionMapper.class
+com\example\taskmanager\model\ErrorResponse.class
 com\example\taskmanager\repository\TaskManagerRepository.class
