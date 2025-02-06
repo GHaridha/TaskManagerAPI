@@ -17,6 +17,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -26,14 +27,14 @@ public class TaskResource {
 
 	@Inject
 	private TaskManagerRepository taskManagerRepository;
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Task> getAllTasks(@QueryParam("pageNum") @DefaultValue("0") int pageNum ,
+	public List<Task> getAllTasks(@QueryParam("pageNum") @DefaultValue("0") int pageNum,
 			@QueryParam("pageSize") @DefaultValue("10") int pageSize) {
-	    return taskManagerRepository.findAllTasks(pageNum,pageSize);
+		return taskManagerRepository.findAllTasks(pageNum, pageSize);
 	}
-	
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -41,40 +42,46 @@ public class TaskResource {
 		taskManagerRepository.save(task);
 		return Response.status(Status.CREATED).entity(task).build();
 	}
-	
+
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findById(@PathParam("id") Long id) {
 		Task task = taskManagerRepository.findById(id);
-		if(task == null) {
-			return Response.status(Status.NOT_FOUND).build();
+		if (task == null) {
+			Response response = Response.status(Status.NOT_FOUND).build();
+			throw new WebApplicationException(response);
 		}
 		return Response.ok(task).build();
 	}
-	
+
 	@DELETE
 	@Path("/{id}")
 	public Response delete(@PathParam("id") Long id) {
 		taskManagerRepository.remove(id);
 		return Response.status(Status.NO_CONTENT).build();
 	}
-	
+
 	@PUT
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("id") Long id, Task updatedTask) {
+		if (updatedTask == null) {
+			return Response.status(Status.BAD_REQUEST).entity("Updated task data cannot be null")
+					.type(MediaType.TEXT_PLAIN).build();
+		}
 		Task existingTask = taskManagerRepository.findById(id);
-		if(existingTask == null) {
-			return Response.status(Status.NOT_FOUND).build();
+		if (existingTask == null) {
+			Response response = Response.status(Status.NOT_FOUND).build();
+			throw new WebApplicationException("Task with id " +id+ "not found", response);
 		}
-		else {
-			existingTask.setTitle(updatedTask.getTitle());
-			existingTask.setDescription(updatedTask.getDescription());
-			existingTask.setCompleted(updatedTask.isCompleted());
-			taskManagerRepository.save(existingTask);
-			return Response.ok(existingTask).build();
-		}
+
+		existingTask.setTitle(updatedTask.getTitle());
+		existingTask.setDescription(updatedTask.getDescription());
+		existingTask.setCompleted(updatedTask.isCompleted());
+		taskManagerRepository.save(existingTask);
+		return Response.ok(existingTask).build();
+
 	}
 }
